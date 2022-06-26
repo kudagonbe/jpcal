@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"time"
 
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -21,8 +22,9 @@ import (
 const url = "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
 
 func main() {
-	var holidayMap map[int]map[int]string = map[int]map[int]string{}
-	var holidayNameMap map[int]map[int]string = map[int]map[int]string{}
+	var minY, maxY int
+	var holidayMap map[int]map[int]string = make(map[int]map[int]string, 128)
+	var holidayNameMap map[int]map[int]string = make(map[int]map[int]string, 128)
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
@@ -65,9 +67,18 @@ func main() {
 			log.Fatal(err)
 		}
 		d := ymd[2]
+
+		if minY == 0 || minY > y {
+			minY = y
+		}
+
+		if maxY < y {
+			maxY = y
+		}
+
 		if _, ok := holidayMap[y]; !ok {
-			holidayMap[y] = map[int]string{}
-			holidayNameMap[y] = map[int]string{}
+			holidayMap[y] = make(map[int]string, 12)
+			holidayNameMap[y] = make(map[int]string, 12)
 		}
 
 		if _, ok := holidayMap[y][m]; !ok {
@@ -80,12 +91,78 @@ func main() {
 		holidayNameMap[y][m] += "," + record[1]
 	}
 
+	var weekdayMap map[int]map[int]string = make(map[int]map[int]string, maxY-minY+1)
+	var saturdayMap map[int]map[int]string = make(map[int]map[int]string, maxY-minY+1)
+	var sundayMap map[int]map[int]string = make(map[int]map[int]string, maxY-minY+1)
+
+	for i := 0; i < maxY-minY+1; i++ {
+		var y int = minY + i
+		weekdayMap[y] = make(map[int]string, 12)
+		saturdayMap[y] = make(map[int]string, 12)
+		sundayMap[y] = make(map[int]string, 12)
+
+		for m := 1; m <= 12; m++ {
+			var holidaysYM []bool = make([]bool, 32, 32)
+			if v, ok := holidayMap[y][m]; ok {
+				for _, v2 := range strings.Split(v, ",") {
+					i, err := strconv.Atoi(v2)
+					if err != nil {
+						log.Fatal(err)
+					}
+					holidaysYM[i] = true
+				}
+			}
+			var firstDayTime time.Time = time.Date(y, time.Month(m), 1, 0, 0, 0, 0, time.UTC)
+			var firstDayWeekDay time.Weekday = firstDayTime.Weekday()
+			var lastDay int = firstDayTime.AddDate(0, 1, 0).AddDate(0, 0, -1).Day()
+
+			for d := 1; d <= lastDay; d++ {
+				if holidaysYM[d] {
+					continue
+				}
+				switch (d + int(firstDayWeekDay)) % 7 {
+				case 1:
+					if _, ok := sundayMap[y][m]; ok {
+						sundayMap[y][m] += "," + strconv.Itoa(d)
+					} else {
+						sundayMap[y][m] = strconv.Itoa(d)
+					}
+				case 0:
+					if _, ok := saturdayMap[y][m]; ok {
+						saturdayMap[y][m] += "," + strconv.Itoa(d)
+					} else {
+						saturdayMap[y][m] = strconv.Itoa(d)
+					}
+				default:
+					if _, ok := weekdayMap[y][m]; ok {
+						weekdayMap[y][m] += "," + strconv.Itoa(d)
+					} else {
+						weekdayMap[y][m] = strconv.Itoa(d)
+					}
+				}
+
+			}
+		}
+	}
+
 	var v = struct {
 		URL            string
 		HolidayMap     map[int]map[int]string
 		HolidayNameMap map[int]map[int]string
+		WeekdayMap     map[int]map[int]string
+		SaturdayMap    map[int]map[int]string
+		SundayMap      map[int]map[int]string
+		MinYear        int
+		MaxYear        int
 	}{
-		url, holidayMap, holidayNameMap,
+		url,
+		holidayMap,
+		holidayNameMap,
+		weekdayMap,
+		saturdayMap,
+		sundayMap,
+		minY,
+		maxY,
 	}
 
 	var buf bytes.Buffer
@@ -104,6 +181,9 @@ const prog = `
 
 package jpcal
 
+const minYear int = {{ .MinYear }}
+const maxYear int = {{ .MaxYear }}
+
 var holidays = map[int]map[int]string{
 {{range $k1, $v1 := .HolidayMap}}	{{ $k1 }}: {
 	{{range $k2, $v2 := $v1}} {{ $k2 }}: "{{ $v2 }}",
@@ -113,6 +193,27 @@ var holidays = map[int]map[int]string{
 
 var holidayNames = map[int]map[int]string{
 {{range $k1, $v1 := .HolidayNameMap}}	{{ $k1 }}: {
+	{{range $k2, $v2 := $v1}} {{ $k2 }}: "{{ $v2 }}",
+	{{end}}
+},
+{{end}}}
+
+var weekdays = map[int]map[int]string{
+{{range $k1, $v1 := .WeekdayMap}}	{{ $k1 }}: {
+	{{range $k2, $v2 := $v1}} {{ $k2 }}: "{{ $v2 }}",
+	{{end}}
+},
+{{end}}}
+
+var saturdays = map[int]map[int]string{
+{{range $k1, $v1 := .SaturdayMap}}	{{ $k1 }}: {
+	{{range $k2, $v2 := $v1}} {{ $k2 }}: "{{ $v2 }}",
+	{{end}}
+},
+{{end}}}
+
+var sundays = map[int]map[int]string{
+{{range $k1, $v1 := .SundayMap}}	{{ $k1 }}: {
 	{{range $k2, $v2 := $v1}} {{ $k2 }}: "{{ $v2 }}",
 	{{end}}
 },
