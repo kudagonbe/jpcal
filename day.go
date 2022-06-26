@@ -5,6 +5,7 @@ import "time"
 const dateFmt = "2006-01-02"
 
 type Day interface {
+	Str() string
 	Time() (time.Time, error)
 	Type() string
 	Description() string
@@ -19,10 +20,14 @@ type dayType string
 
 const (
 	TypeWeekDay         dayType = "weekday"
-	TypeSaturday        dayType = "satuaday"
+	TypeSaturday        dayType = "saturday"
 	TypeSunday          dayType = "sunday"
 	TypeNationalHoliday dayType = "national_holiday"
 )
+
+func (d *NormalDay) Str() string {
+	return d.date
+}
 
 func (d *NormalDay) Time() (time.Time, error) {
 	return time.Parse(dateFmt, d.date)
@@ -49,6 +54,10 @@ type NationalHoliday struct {
 	holidayName string
 }
 
+func (d *NationalHoliday) Str() string {
+	return d.date
+}
+
 func (d *NationalHoliday) Time() (time.Time, error) {
 	return time.Parse(dateFmt, d.date)
 }
@@ -59,4 +68,18 @@ func (d *NationalHoliday) Type() string {
 
 func (d *NationalHoliday) Description() string {
 	return d.holidayName
+}
+
+type Days []Day
+
+func (ds Days) Len() int {
+	return len(ds)
+}
+
+func (ds Days) Less(i, j int) bool {
+	return ds[i].Str() < ds[j].Str()
+}
+
+func (ds Days) Swap(i, j int) {
+	ds[i], ds[j] = ds[j], ds[i]
 }
