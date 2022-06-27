@@ -4,15 +4,11 @@
 
 This is a library made in Go language for acquiring and judging Japanese holidays.
 
-日本の平日・土日・祝日を取得・判定するためのGo言語製のライブラリです。
-
 ## Usage
 
 ### Get `Days` instance
 
-You can use public functions that return `Days` instance.
-
-`Days`型のインスタンスを返却する関数を使用できます。
++ You can use public functions that return `Days` instance.
 
 ```go
 const year int = 2020
@@ -44,9 +40,7 @@ ds, err = jpcal.SpecificTypeDaysYM(year, month, jpcal.TypeWeekDay, jpcal.TypeNat
 
 ### Usage of type `Day`
 
-`Days` is expanded type of `[]Day`, So you should know usage of type `Day`.
-
-`Days`は`[]Day`の拡張なので、`Day`型のメソッドを知るべきです。
++ `Days` is expanded type of `[]Day`, So you should know usage of type `Day`.
 
 ```go
 type Day interface {
