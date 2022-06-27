@@ -8,42 +8,45 @@ This is a library made in Go language for acquiring and judging Japanese holiday
 
 ## Usage
 
-### Get **Days** instance
+### Get `Days` instance
 
 You can use public functions that return `Days` instance.
 
+`Days`型のインスタンスを返却する関数を使用できます。
+
 ```go
-	const year int = 2020
-	const month int = 1
+const year int = 2020
+const month int = 1
 
-	var ds jpcal.Days
-    var err error
+var ds jpcal.Days
+var err error
 
-	// Get all days in a year.
-	ds, err = jpcal.AllDays(year)
+// Get all days in a year.
+ds, err = jpcal.AllDays(year)
 
-	// Get all days in a month.
-	ds, err = jpcal.AllDaysYM(year, month)
+// Get all days in a month.
+ds, err = jpcal.AllDaysYM(year, month)
 
-	// Get all national holidays in a year.
-	ds, err = jpcal.Holidays(year)
+// Get all national holidays in a year.
+ds, err = jpcal.Holidays(year)
 
-	// Get all national holidays in a month.
-	ds, err = jpcal.HolidaysYM(year, month)
+// Get all national holidays in a month.
+ds, err = jpcal.HolidaysYM(year, month)
 
-	// Get specific type days in a year.
-    // You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
-	ds, err = jpcal.SpecificTypeDays(year, jpcal.TypeSaturday, jpcal.TypeSunday)
+// Get specific type days in a year.
+// You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
+ds, err = jpcal.SpecificTypeDays(year, jpcal.TypeSaturday, jpcal.TypeSunday)
 
-	// Get specific type days in a month.
-    // You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
-	ds, err = jpcal.SpecificTypeDaysYM(year, month, jpcal.TypeWeekDay, jpcal.TypeNationalHoliday)
+// Get specific type days in a month.
+// You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
+ds, err = jpcal.SpecificTypeDaysYM(year, month, jpcal.TypeWeekDay, jpcal.TypeNationalHoliday)
 ```
 
-### Usage of type **Day**
+### Usage of type `Day`
 
-`Days` is expanded type of `[]Day`.
-So you should know usage of type `Day`.
+`Days` is expanded type of `[]Day`, So you should know usage of type `Day`.
+
+`Days`は`[]Day`の拡張なので、`Day`型のメソッドを知るべきです。
 
 ```go
 type Day interface {
@@ -56,18 +59,18 @@ type Day interface {
     /*
     Get time.Time instance
     */
-	Time() (time.Time, error)
+    Time() (time.Time, error)
 
     /*
     Get type of day
     "weekday", "saturday", "sunday" and "national_holiday"
     */
-	Type() string
+    Type() string
 
     /*
     Get description of day in Japanese
     */
-	Description() string
+    Description() string
 }
 ```
 
