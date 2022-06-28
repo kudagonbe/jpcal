@@ -27,15 +27,15 @@ func main() {
 	}
 
 	// Get all national holidays in a year.
-	ds, _ = jpcal.Holidays(year)
-	log.Println("====================", "Holidays", "====================")
+	ds, _ = jpcal.NationalHolidays(year)
+	log.Println("====================", "NationalHolidays", "====================")
 	for _, v := range ds {
 		log.Println(v)
 	}
 
 	// Get all national holidays in a month.
-	ds, _ = jpcal.HolidaysYM(year, month)
-	log.Println("====================", "HolidaysYM", "====================")
+	ds, _ = jpcal.NationalHolidaysYM(year, month)
+	log.Println("====================", "NationalHolidaysYM", "====================")
 	for _, v := range ds {
 		log.Println(v)
 	}

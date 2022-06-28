@@ -7,37 +7,37 @@ const dateFmt = "2006-01-02"
 type Day interface {
 	Str() string
 	Time() (time.Time, error)
-	Type() string
+	Type() DayType
 	Description() string
 }
 
-type NormalDay struct {
+type normalDay struct {
 	date    string
-	dayType dayType
+	dayType DayType
 }
 
-type dayType string
+type DayType string
 
 const (
-	TypeWeekDay         dayType = "weekday"
-	TypeSaturday        dayType = "saturday"
-	TypeSunday          dayType = "sunday"
-	TypeNationalHoliday dayType = "national_holiday"
+	TypeWeekDay         DayType = "weekday"
+	TypeSaturday        DayType = "saturday"
+	TypeSunday          DayType = "sunday"
+	TypeNationalHoliday DayType = "national_holiday"
 )
 
-func (d *NormalDay) Str() string {
+func (d *normalDay) Str() string {
 	return d.date
 }
 
-func (d *NormalDay) Time() (time.Time, error) {
+func (d *normalDay) Time() (time.Time, error) {
 	return time.Parse(dateFmt, d.date)
 }
 
-func (d *NormalDay) Type() string {
-	return string(d.dayType)
+func (d *normalDay) Type() DayType {
+	return d.dayType
 }
 
-func (d *NormalDay) Description() string {
+func (d *normalDay) Description() string {
 	switch d.dayType {
 	case TypeWeekDay:
 		return "平日"
@@ -49,24 +49,24 @@ func (d *NormalDay) Description() string {
 	return ""
 }
 
-type NationalHoliday struct {
+type nationalHoliday struct {
 	date        string
 	holidayName string
 }
 
-func (d *NationalHoliday) Str() string {
+func (d *nationalHoliday) Str() string {
 	return d.date
 }
 
-func (d *NationalHoliday) Time() (time.Time, error) {
+func (d *nationalHoliday) Time() (time.Time, error) {
 	return time.Parse(dateFmt, d.date)
 }
 
-func (d *NationalHoliday) Type() string {
-	return string(TypeNationalHoliday)
+func (d *nationalHoliday) Type() DayType {
+	return TypeNationalHoliday
 }
 
-func (d *NationalHoliday) Description() string {
+func (d *nationalHoliday) Description() string {
 	return d.holidayName
 }
 

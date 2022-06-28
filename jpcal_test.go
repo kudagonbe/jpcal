@@ -6,27 +6,27 @@ import (
 )
 
 var wantHolidays2020 Days = []Day{
-	&NationalHoliday{date: "2020-01-01", holidayName: "元日"},
-	&NationalHoliday{date: "2020-01-13", holidayName: "成人の日"},
-	&NationalHoliday{date: "2020-02-11", holidayName: "建国記念の日"},
-	&NationalHoliday{date: "2020-02-23", holidayName: "天皇誕生日"},
-	&NationalHoliday{date: "2020-02-24", holidayName: "休日"},
-	&NationalHoliday{date: "2020-03-20", holidayName: "春分の日"},
-	&NationalHoliday{date: "2020-04-29", holidayName: "昭和の日"},
-	&NationalHoliday{date: "2020-05-03", holidayName: "憲法記念日"},
-	&NationalHoliday{date: "2020-05-04", holidayName: "みどりの日"},
-	&NationalHoliday{date: "2020-05-05", holidayName: "こどもの日"},
-	&NationalHoliday{date: "2020-05-06", holidayName: "休日"},
-	&NationalHoliday{date: "2020-07-23", holidayName: "海の日"},
-	&NationalHoliday{date: "2020-07-24", holidayName: "スポーツの日"},
-	&NationalHoliday{date: "2020-08-10", holidayName: "山の日"},
-	&NationalHoliday{date: "2020-09-21", holidayName: "敬老の日"},
-	&NationalHoliday{date: "2020-09-22", holidayName: "秋分の日"},
-	&NationalHoliday{date: "2020-11-03", holidayName: "文化の日"},
-	&NationalHoliday{date: "2020-11-23", holidayName: "勤労感謝の日"},
+	&nationalHoliday{date: "2020-01-01", holidayName: "元日"},
+	&nationalHoliday{date: "2020-01-13", holidayName: "成人の日"},
+	&nationalHoliday{date: "2020-02-11", holidayName: "建国記念の日"},
+	&nationalHoliday{date: "2020-02-23", holidayName: "天皇誕生日"},
+	&nationalHoliday{date: "2020-02-24", holidayName: "休日"},
+	&nationalHoliday{date: "2020-03-20", holidayName: "春分の日"},
+	&nationalHoliday{date: "2020-04-29", holidayName: "昭和の日"},
+	&nationalHoliday{date: "2020-05-03", holidayName: "憲法記念日"},
+	&nationalHoliday{date: "2020-05-04", holidayName: "みどりの日"},
+	&nationalHoliday{date: "2020-05-05", holidayName: "こどもの日"},
+	&nationalHoliday{date: "2020-05-06", holidayName: "休日"},
+	&nationalHoliday{date: "2020-07-23", holidayName: "海の日"},
+	&nationalHoliday{date: "2020-07-24", holidayName: "スポーツの日"},
+	&nationalHoliday{date: "2020-08-10", holidayName: "山の日"},
+	&nationalHoliday{date: "2020-09-21", holidayName: "敬老の日"},
+	&nationalHoliday{date: "2020-09-22", holidayName: "秋分の日"},
+	&nationalHoliday{date: "2020-11-03", holidayName: "文化の日"},
+	&nationalHoliday{date: "2020-11-23", holidayName: "勤労感謝の日"},
 }
 
-func TestHolidays(t *testing.T) {
+func TestNationalHolidays(t *testing.T) {
 	type args struct {
 		year int
 	}
@@ -57,19 +57,19 @@ func TestHolidays(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Holidays(tt.args.year)
+			got, err := NationalHolidays(tt.args.year)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Holidays() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("NationalHolidays() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Holidays() = %v, want %v", got, tt.want)
+				t.Errorf("NationalHolidays() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestHolidaysYM(t *testing.T) {
+func TestNationalHolidaysYM(t *testing.T) {
 	type args struct {
 		year  int
 		month int
@@ -113,13 +113,13 @@ func TestHolidaysYM(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := HolidaysYM(tt.args.year, tt.args.month)
+			got, err := NationalHolidaysYM(tt.args.year, tt.args.month)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("HolidaysYM() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("NationalHolidaysYM() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("HolidaysYM() = %v, want %v", got, tt.want)
+				t.Errorf("NationalHolidaysYM() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -227,7 +227,7 @@ func TestAllDaysYM(t *testing.T) {
 func TestSpecificTypeDays(t *testing.T) {
 	type args struct {
 		year int
-		ts   []dayType
+		ts   []DayType
 	}
 	tests := []struct {
 		name      string
@@ -237,49 +237,49 @@ func TestSpecificTypeDays(t *testing.T) {
 	}{
 		{
 			name:      "success_weekday",
-			args:      args{year: 2020, ts: []dayType{TypeWeekDay}},
+			args:      args{year: 2020, ts: []DayType{TypeWeekDay}},
 			wantCount: 246,
 			wantErr:   false,
 		},
 		{
 			name:      "success_saturday",
-			args:      args{year: 2020, ts: []dayType{TypeSaturday}},
+			args:      args{year: 2020, ts: []DayType{TypeSaturday}},
 			wantCount: 52,
 			wantErr:   false,
 		},
 		{
 			name:      "success_sunday",
-			args:      args{year: 2020, ts: []dayType{TypeSunday}},
+			args:      args{year: 2020, ts: []DayType{TypeSunday}},
 			wantCount: 50,
 			wantErr:   false,
 		},
 		{
 			name:      "success_holiday",
-			args:      args{year: 2020, ts: []dayType{TypeNationalHoliday}},
+			args:      args{year: 2020, ts: []DayType{TypeNationalHoliday}},
 			wantCount: 18,
 			wantErr:   false,
 		},
 		{
 			name:      "success_weekday_and_saturday",
-			args:      args{year: 2020, ts: []dayType{TypeWeekDay, TypeSaturday}},
+			args:      args{year: 2020, ts: []DayType{TypeWeekDay, TypeSaturday}},
 			wantCount: 298,
 			wantErr:   false,
 		},
 		{
 			name:      "success_sunday_and_holiday",
-			args:      args{year: 2020, ts: []dayType{TypeSunday, TypeNationalHoliday}},
+			args:      args{year: 2020, ts: []DayType{TypeSunday, TypeNationalHoliday}},
 			wantCount: 68,
 			wantErr:   false,
 		},
 		{
 			name:      "success_all",
-			args:      args{year: 2020, ts: []dayType{TypeWeekDay, TypeSaturday, TypeSunday, TypeNationalHoliday}},
+			args:      args{year: 2020, ts: []DayType{TypeWeekDay, TypeSaturday, TypeSunday, TypeNationalHoliday}},
 			wantCount: 366,
 			wantErr:   false,
 		},
 		{
 			name:      "success_type_duplicate",
-			args:      args{year: 2020, ts: []dayType{TypeWeekDay, TypeWeekDay}},
+			args:      args{year: 2020, ts: []DayType{TypeWeekDay, TypeWeekDay}},
 			wantCount: 246,
 			wantErr:   false,
 		},
@@ -314,7 +314,7 @@ func TestSpecificTypeDaysYM(t *testing.T) {
 	type args struct {
 		year  int
 		month int
-		ts    []dayType
+		ts    []DayType
 	}
 	tests := []struct {
 		name      string
@@ -324,49 +324,49 @@ func TestSpecificTypeDaysYM(t *testing.T) {
 	}{
 		{
 			name:      "success_weekday",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeWeekDay}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeWeekDay}},
 			wantCount: 21,
 			wantErr:   false,
 		},
 		{
 			name:      "success_saturday",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeSaturday}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeSaturday}},
 			wantCount: 4,
 			wantErr:   false,
 		},
 		{
 			name:      "success_sunday",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeSunday}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeSunday}},
 			wantCount: 4,
 			wantErr:   false,
 		},
 		{
 			name:      "success_holiday",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeNationalHoliday}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeNationalHoliday}},
 			wantCount: 2,
 			wantErr:   false,
 		},
 		{
 			name:      "success_weekday_and_saturday",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeWeekDay, TypeSaturday}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeWeekDay, TypeSaturday}},
 			wantCount: 25,
 			wantErr:   false,
 		},
 		{
 			name:      "success_sunday_and_holiday",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeSunday, TypeNationalHoliday}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeSunday, TypeNationalHoliday}},
 			wantCount: 6,
 			wantErr:   false,
 		},
 		{
 			name:      "success_all",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeWeekDay, TypeSaturday, TypeSunday, TypeNationalHoliday}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeWeekDay, TypeSaturday, TypeSunday, TypeNationalHoliday}},
 			wantCount: 31,
 			wantErr:   false,
 		},
 		{
 			name:      "success_type_duplicate",
-			args:      args{year: 2020, month: 1, ts: []dayType{TypeWeekDay, TypeWeekDay}},
+			args:      args{year: 2020, month: 1, ts: []DayType{TypeWeekDay, TypeWeekDay}},
 			wantCount: 21,
 			wantErr:   false,
 		},
@@ -404,6 +404,306 @@ func TestSpecificTypeDaysYM(t *testing.T) {
 			}
 			if got.Len() != tt.wantCount {
 				t.Errorf("ActualCount = %d, wantCount %v", got.Len(), tt.wantCount)
+			}
+		})
+	}
+}
+
+func TestIsWeekday(t *testing.T) {
+	type args struct {
+		year  int
+		month int
+		day   int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			name:    "weekday",
+			args:    args{year: 2020, month: 1, day: 2},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "saturday",
+			args:    args{year: 2020, month: 1, day: 4},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "sunday",
+			args:    args{year: 2020, month: 1, day: 5},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "national holiday",
+			args:    args{year: 2020, month: 1, day: 1},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "too_small_year",
+			args:    args{year: minYear - 1, month: 1, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_year",
+			args:    args{year: maxYear + 1, month: 12, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_small_month",
+			args:    args{year: 2020, month: 0, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_month",
+			args:    args{year: 2020, month: 13, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := IsWeekday(tt.args.year, tt.args.month, tt.args.day)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("IsWeekday() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("IsWeekday() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsSaturday(t *testing.T) {
+	type args struct {
+		year  int
+		month int
+		day   int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			name:    "weekday",
+			args:    args{year: 2020, month: 1, day: 2},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "saturday",
+			args:    args{year: 2020, month: 1, day: 4},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "sunday",
+			args:    args{year: 2020, month: 1, day: 5},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "national holiday",
+			args:    args{year: 2020, month: 1, day: 1},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "too_small_year",
+			args:    args{year: minYear - 1, month: 1, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_year",
+			args:    args{year: maxYear + 1, month: 12, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_small_month",
+			args:    args{year: 2020, month: 0, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_month",
+			args:    args{year: 2020, month: 13, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := IsSaturday(tt.args.year, tt.args.month, tt.args.day)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("IsSaturday() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("IsSaturday() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsSunday(t *testing.T) {
+	type args struct {
+		year  int
+		month int
+		day   int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			name:    "weekday",
+			args:    args{year: 2020, month: 1, day: 2},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "saturday",
+			args:    args{year: 2020, month: 1, day: 4},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "sunday",
+			args:    args{year: 2020, month: 1, day: 5},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "national holiday",
+			args:    args{year: 2020, month: 1, day: 1},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "too_small_year",
+			args:    args{year: minYear - 1, month: 1, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_year",
+			args:    args{year: maxYear + 1, month: 12, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_small_month",
+			args:    args{year: 2020, month: 0, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_month",
+			args:    args{year: 2020, month: 13, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := IsSunday(tt.args.year, tt.args.month, tt.args.day)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("IsSunday() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("IsSunday() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsNationalHoliday(t *testing.T) {
+	type args struct {
+		year  int
+		month int
+		day   int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			name:    "weekday",
+			args:    args{year: 2020, month: 1, day: 2},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "saturday",
+			args:    args{year: 2020, month: 1, day: 4},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "sunday",
+			args:    args{year: 2020, month: 1, day: 5},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "national holiday",
+			args:    args{year: 2020, month: 1, day: 1},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "too_small_year",
+			args:    args{year: minYear - 1, month: 1, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_year",
+			args:    args{year: maxYear + 1, month: 12, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_small_month",
+			args:    args{year: 2020, month: 0, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "too_big_month",
+			args:    args{year: 2020, month: 13, day: 1},
+			want:    false,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := IsNationalHoliday(tt.args.year, tt.args.month, tt.args.day)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("IsNationalHoliday() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("IsNationalHoliday() = %v, want %v", got, tt.want)
 			}
 		})
 	}

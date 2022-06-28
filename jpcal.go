@@ -1,6 +1,7 @@
 package jpcal
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strconv"
@@ -8,117 +9,29 @@ import (
 	"time"
 )
 
-func Holidays(year int) (Days, error) {
-	var ds Days = make([]Day, 0, 366)
-
-	if err := chkYear(year); err != nil {
-		return nil, err
-	}
-
-	if newds, err := appendHolidays(ds, year); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	sort.Sort(ds)
-	return ds, nil
+// Get all national holidays in a year.
+func NationalHolidays(year int) (Days, error) {
+	return SpecificTypeDays(year, TypeNationalHoliday)
 }
 
-func HolidaysYM(year int, month int) (Days, error) {
-	var ds Days = make([]Day, 0, 31)
-
-	if err := chkYear(year); err != nil {
-		return nil, err
-	}
-	if err := chkMonth(month); err != nil {
-		return nil, err
-	}
-
-	if newds, err := appendHolidaysYM(ds, year, month); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	sort.Sort(ds)
-	return ds, nil
+// Get all national holidays in a month.
+func NationalHolidaysYM(year int, month int) (Days, error) {
+	return SpecificTypeDaysYM(year, month, TypeNationalHoliday)
 }
 
+// Get all days in a year.
 func AllDays(year int) (Days, error) {
-	var ds Days = make([]Day, 0, 366)
-	if err := chkYear(year); err != nil {
-		return nil, err
-	}
-
-	if newds, err := appendWeekdays(ds, year); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	if newds, err := appendSaturdays(ds, year); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	if newds, err := appendSundays(ds, year); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	if newds, err := appendHolidays(ds, year); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	sort.Sort(ds)
-	return ds, nil
+	return SpecificTypeDays(year, TypeWeekDay, TypeSaturday, TypeSunday, TypeNationalHoliday)
 }
 
+// Get all days in a month.
 func AllDaysYM(year int, month int) (Days, error) {
-	var ds Days = make([]Day, 0, 31)
-
-	if err := chkYear(year); err != nil {
-		return nil, err
-	}
-
-	if err := chkMonth(month); err != nil {
-		return nil, err
-	}
-
-	if newds, err := appendWeekdaysYM(ds, year, month); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	if newds, err := appendSaturdaysYM(ds, year, month); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	if newds, err := appendSundaysYM(ds, year, month); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	if newds, err := appendHolidaysYM(ds, year, month); err != nil {
-		return nil, err
-	} else {
-		ds = newds
-	}
-
-	sort.Sort(ds)
-	return ds, nil
+	return SpecificTypeDaysYM(year, month, TypeWeekDay, TypeSaturday, TypeSunday, TypeNationalHoliday)
 }
 
-func SpecificTypeDays(year int, ts ...dayType) (Days, error) {
+// Get specific type days in a year.
+// You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
+func SpecificTypeDays(year int, ts ...DayType) (Days, error) {
 	var ds Days = make([]Day, 0, 366)
 	var wd, sat, sun, hd bool
 
@@ -140,7 +53,7 @@ func SpecificTypeDays(year int, ts ...dayType) (Days, error) {
 	}
 
 	if wd {
-		if newds, err := appendWeekdays(ds, year); err != nil {
+		if newds, err := appendNormalDays(ds, year, TypeWeekDay); err != nil {
 			return nil, err
 		} else {
 			ds = newds
@@ -148,7 +61,7 @@ func SpecificTypeDays(year int, ts ...dayType) (Days, error) {
 	}
 
 	if sat {
-		if newds, err := appendSaturdays(ds, year); err != nil {
+		if newds, err := appendNormalDays(ds, year, TypeSaturday); err != nil {
 			return nil, err
 		} else {
 			ds = newds
@@ -156,7 +69,7 @@ func SpecificTypeDays(year int, ts ...dayType) (Days, error) {
 	}
 
 	if sun {
-		if newds, err := appendSundays(ds, year); err != nil {
+		if newds, err := appendNormalDays(ds, year, TypeSunday); err != nil {
 			return nil, err
 		} else {
 			ds = newds
@@ -175,7 +88,9 @@ func SpecificTypeDays(year int, ts ...dayType) (Days, error) {
 	return ds, nil
 }
 
-func SpecificTypeDaysYM(year int, month int, ts ...dayType) (Days, error) {
+// Get specific type days in a month.
+// You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
+func SpecificTypeDaysYM(year int, month int, ts ...DayType) (Days, error) {
 	var ds Days = make([]Day, 0, 31)
 	var wd, sat, sun, hd bool
 
@@ -201,7 +116,7 @@ func SpecificTypeDaysYM(year int, month int, ts ...dayType) (Days, error) {
 	}
 
 	if wd {
-		if newds, err := appendWeekdaysYM(ds, year, month); err != nil {
+		if newds, err := appendNormalDaysYM(ds, year, month, TypeWeekDay); err != nil {
 			return nil, err
 		} else {
 			ds = newds
@@ -209,7 +124,7 @@ func SpecificTypeDaysYM(year int, month int, ts ...dayType) (Days, error) {
 	}
 
 	if sat {
-		if newds, err := appendSaturdaysYM(ds, year, month); err != nil {
+		if newds, err := appendNormalDaysYM(ds, year, month, TypeSaturday); err != nil {
 			return nil, err
 		} else {
 			ds = newds
@@ -217,7 +132,7 @@ func SpecificTypeDaysYM(year int, month int, ts ...dayType) (Days, error) {
 	}
 
 	if sun {
-		if newds, err := appendSundaysYM(ds, year, month); err != nil {
+		if newds, err := appendNormalDaysYM(ds, year, month, TypeSunday); err != nil {
 			return nil, err
 		} else {
 			ds = newds
@@ -236,12 +151,54 @@ func SpecificTypeDaysYM(year int, month int, ts ...dayType) (Days, error) {
 	return ds, nil
 }
 
-func appendHolidays(ds Days, year int) (Days, error) {
-	if _, ok := holidays[year]; !ok {
+func appendNormalDays(ds Days, year int, dt DayType) (Days, error) {
+	for month := 1; month <= 12; month++ {
+		if newds, err := appendNormalDaysYM(ds, year, month, dt); err != nil {
+			return nil, err
+		} else {
+			ds = newds
+		}
+	}
+	return ds, nil
+}
+
+func appendNormalDaysYM(ds Days, year int, month int, dt DayType) (Days, error) {
+	var m map[int]map[int]string
+	switch dt {
+	case TypeWeekDay:
+		m = weekdays
+	case TypeSaturday:
+		m = saturdays
+	case TypeSunday:
+		m = sundays
+	default:
+		return nil, errors.New("invalid day type")
+	}
+	if _, ok := m[year]; !ok {
 		return ds, nil
 	}
 
-	for month := range holidays[year] {
+	if _, ok := m[year][month]; !ok {
+		return ds, nil
+	}
+
+	hs := strings.Split(m[year][month], ",")
+
+	for _, v := range hs {
+		d, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
+		ds = append(ds, &normalDay{
+			date:    fmt.Sprintf("%04d-%02d-%02d", year, month, d),
+			dayType: dt,
+		})
+	}
+	return ds, nil
+}
+
+func appendHolidays(ds Days, year int) (Days, error) {
+	for month := 1; month <= 12; month++ {
 		if newds, err := appendHolidaysYM(ds, year, month); err != nil {
 			return nil, err
 		} else {
@@ -268,126 +225,9 @@ func appendHolidaysYM(ds Days, year int, month int) (Days, error) {
 		if err != nil {
 			return nil, err
 		}
-		ds = append(ds, &NationalHoliday{
+		ds = append(ds, &nationalHoliday{
 			date:        fmt.Sprintf("%04d-%02d-%02d", year, month, d),
 			holidayName: hns[i],
-		})
-	}
-	return ds, nil
-}
-
-func appendWeekdays(ds Days, year int) (Days, error) {
-	if _, ok := weekdays[year]; !ok {
-		return ds, nil
-	}
-
-	for month := range weekdays[year] {
-		if newds, err := appendWeekdaysYM(ds, year, month); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
-	}
-	return ds, nil
-}
-
-func appendWeekdaysYM(ds Days, year int, month int) (Days, error) {
-	if _, ok := weekdays[year]; !ok {
-		return ds, nil
-	}
-
-	if _, ok := weekdays[year][month]; !ok {
-		return ds, nil
-	}
-
-	hs := strings.Split(weekdays[year][month], ",")
-
-	for _, v := range hs {
-		d, err := strconv.Atoi(v)
-		if err != nil {
-			return nil, err
-		}
-		ds = append(ds, &NormalDay{
-			date:    fmt.Sprintf("%04d-%02d-%02d", year, month, d),
-			dayType: TypeWeekDay,
-		})
-	}
-	return ds, nil
-}
-
-func appendSaturdays(ds Days, year int) (Days, error) {
-	if _, ok := saturdays[year]; !ok {
-		return ds, nil
-	}
-
-	for month := range saturdays[year] {
-		if newds, err := appendSaturdaysYM(ds, year, month); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
-	}
-	return ds, nil
-}
-
-func appendSaturdaysYM(ds Days, year int, month int) (Days, error) {
-	if _, ok := saturdays[year]; !ok {
-		return ds, nil
-	}
-
-	if _, ok := saturdays[year][month]; !ok {
-		return ds, nil
-	}
-
-	hs := strings.Split(saturdays[year][month], ",")
-
-	for _, v := range hs {
-		d, err := strconv.Atoi(v)
-		if err != nil {
-			return nil, err
-		}
-		ds = append(ds, &NormalDay{
-			date:    fmt.Sprintf("%04d-%02d-%02d", year, month, d),
-			dayType: TypeSaturday,
-		})
-	}
-	return ds, nil
-}
-
-func appendSundays(ds Days, year int) (Days, error) {
-	if _, ok := sundays[year]; !ok {
-		return ds, nil
-	}
-
-	for month := range sundays[year] {
-		if newds, err := appendSundaysYM(ds, year, month); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
-	}
-	return ds, nil
-}
-
-func appendSundaysYM(ds Days, year int, month int) (Days, error) {
-	if _, ok := sundays[year]; !ok {
-		return ds, nil
-	}
-
-	if _, ok := sundays[year][month]; !ok {
-		return ds, nil
-	}
-
-	hs := strings.Split(sundays[year][month], ",")
-
-	for _, v := range hs {
-		d, err := strconv.Atoi(v)
-		if err != nil {
-			return nil, err
-		}
-		ds = append(ds, &NormalDay{
-			date:    fmt.Sprintf("%04d-%02d-%02d", year, month, d),
-			dayType: TypeSunday,
 		})
 	}
 	return ds, nil
@@ -411,4 +251,58 @@ func chkMonth(month int) error {
 	}
 
 	return nil
+}
+
+// Judge if the specified day is a weekday.
+func IsWeekday(year int, month int, day int) (bool, error) {
+	return isSpecificTypeDay(year, month, day, TypeWeekDay)
+}
+
+// Judge if the specified day is a saturday.
+// (except for national holiday)
+func IsSaturday(year int, month int, day int) (bool, error) {
+	return isSpecificTypeDay(year, month, day, TypeSaturday)
+}
+
+// Judge if the specified day is a sunday.
+// (except for national holiday)
+func IsSunday(year int, month int, day int) (bool, error) {
+	return isSpecificTypeDay(year, month, day, TypeSunday)
+}
+
+// Judge if the specified day is a national holiday.
+func IsNationalHoliday(year int, month int, day int) (bool, error) {
+	return isSpecificTypeDay(year, month, day, TypeNationalHoliday)
+}
+
+func isSpecificTypeDay(year int, month int, day int, dt DayType) (bool, error) {
+	if err := chkYear(year); err != nil {
+		return false, err
+	}
+	if err := chkMonth(month); err != nil {
+		return false, err
+	}
+
+	var m map[int]map[int]string
+	var dayStr string = strconv.Itoa(day)
+
+	switch dt {
+	case TypeWeekDay:
+		m = weekdays
+	case TypeSaturday:
+		m = saturdays
+	case TypeSunday:
+		m = sundays
+	case TypeNationalHoliday:
+		m = holidays
+	default:
+		return false, errors.New("invalid day type")
+	}
+
+	for _, v := range strings.Split(m[year][month], ",") {
+		if v == dayStr {
+			return true, nil
+		}
+	}
+	return false, nil
 }
