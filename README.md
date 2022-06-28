@@ -1,15 +1,14 @@
-# jp-calendar
+# jpcal
 
-## Description
+[![Go Reference](https://pkg.go.dev/badge/github.com/kudagonbe/jpcal.svg)](https://pkg.go.dev/github.com/kudagonbe/jpcal)
 
 This is a library made in Go language for acquiring and judging Japanese holidays.
 
-## Usage
+## Example
 
-### Get `Days` instance
+1. Get `Days` instance
 
-+ You can use public functions that return `Days` instance.
-
+You can use public functions that return `Days` instance.
 ```go
 const year int = 2020
 const month int = 1
@@ -24,47 +23,19 @@ ds, err = jpcal.AllDays(year)
 ds, err = jpcal.AllDaysYM(year, month)
 
 // Get all national holidays in a year.
-ds, err = jpcal.Holidays(year)
+ds, err = jpcal.NationalHolidays(year)
 
 // Get all national holidays in a month.
-ds, err = jpcal.HolidaysYM(year, month)
+ds, err = jpcal.NationalHolidaysYM(year, month)
 
-// Get specific type days in a year.
-// You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
-ds, err = jpcal.SpecificTypeDays(year, jpcal.TypeSaturday, jpcal.TypeSunday)
-
-// Get specific type days in a month.
-// You can choose day type 'TypeWeekDay', 'TypeSaturday', 'TypeSunday', 'TypeNationalHoliday'
-ds, err = jpcal.SpecificTypeDaysYM(year, month, jpcal.TypeWeekDay, jpcal.TypeNationalHoliday)
 ```
 
-### Usage of type `Day`
+2. Judge DayType
 
-+ `Days` is expanded type of `[]Day`, So you should know usage of type `Day`.
+You can judge DayType.
 
 ```go
-type Day interface {
-    /*
-    Get date string
-    e.g. "2006-01-01"
-    */
-    Str() string
+// Judge if the specified day is a national holiday.
+result, err := jpcal.IsNationalHoliday(2020, 1, 1) //true, nil
 
-    /*
-    Get time.Time instance
-    */
-    Time() (time.Time, error)
-
-    /*
-    Get type of day
-    "weekday", "saturday", "sunday" and "national_holiday"
-    */
-    Type() string
-
-    /*
-    Get description of day in Japanese
-    */
-    Description() string
-}
 ```
-
