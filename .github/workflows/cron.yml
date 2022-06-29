@@ -35,14 +35,12 @@ jobs:
         env:
           TZ: 'Asia/Tokyo'
         run: echo "CURRENT_DATETIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+      - uses: actions/checkout@v3
       - name: go generate
-        uses: actions/checkout@v3
         run: go generate ./gen
       - name: fetch
-        uses: actions/checkout@v3
         run: git fetch origin ${{ github.base_ref }} --depth=1
       - name: get diff
-        uses: actions/checkout@v3
         run: echo "::set-output name=changed::$(git diff --name-only origin/${{ github.base_ref }} HEAD --relative ./ | wc -l)"
         id: diff
       - name: push branch
