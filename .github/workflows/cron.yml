@@ -58,6 +58,7 @@ jobs:
         if: ${{ steps.diff.outputs.changed != '0' }}
         uses: repo-sync/pull-request@v2
         with:
+          source_branch: "feature/update_calendar_${{ env.CURRENT_DATETIME }}"
           destination_branch: "main"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_title: "Update Calendar"
