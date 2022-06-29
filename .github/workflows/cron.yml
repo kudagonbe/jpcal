@@ -1,6 +1,8 @@
 name: CRON Schedule job
 
-on: [push]
+on:
+  schedule:
+    - cron:  '0 7 * * *'
 
 jobs:
   setup:
@@ -10,22 +12,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: "1.18"
-
-  build:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: build
-        run: go build ./...
-
-  test:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: test
-        run: go test ./... -v
 
   generate-calendar:
     needs: setup
