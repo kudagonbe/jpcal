@@ -36,10 +36,6 @@ jobs:
           TZ: 'Asia/Tokyo'
         run: echo "CURRENT_DATETIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
       - uses: actions/checkout@v3
-      - name: gh command test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr list
       - name: go generate
         run: go generate ./gen
       - name: get diff
