@@ -41,7 +41,7 @@ jobs:
       - name: fetch
         run: git fetch origin ${{ github.base_ref }} --depth=1
       - name: get diff
-        run: echo "::set-output name=changed::$(git diff --name-only origin/${{ github.base_ref }} HEAD --relative ./ | wc -l)"
+        run: echo "::set-output name=changed::$(git diff --name-only origin/main HEAD --relative ./ | wc -l)"
         id: diff
       - name: push branch
         if: ${{ steps.diff.outputs.changed != '0' }}
