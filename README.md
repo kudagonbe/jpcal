@@ -1,7 +1,7 @@
 # jpcal
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/kudagonbe/jpcal.svg)](https://pkg.go.dev/github.com/kudagonbe/jpcal)
-![ci workflow](https://github.com/kudagonbe/jpcal/actions/workflows/ci.yml/badge.svg)
+[![ci workflow](https://github.com/kudagonbe/jpcal/actions/workflows/ci.yml/badge.svg)](https://github.com/kudagonbe/jpcal/actions/workflows/ci.yml)
 
 This is a library made in Go language for acquiring and judging Japanese holidays.
 
