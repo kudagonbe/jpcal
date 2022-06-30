@@ -2,11 +2,9 @@ package jpcal
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type Days []Day
@@ -252,24 +250,4 @@ func appendHolidaysYM(ds Days, year int, month int) (Days, error) {
 		})
 	}
 	return ds, nil
-}
-
-func chkYear(year int) error {
-	if year < minYear {
-		return fmt.Errorf("jpcal is only supported after %d, but the year you set is %d", minYear, year)
-	}
-
-	if year > maxYear {
-		return fmt.Errorf("jpcal is only supported until %d, but the year you set is %d", maxYear, year)
-	}
-
-	return nil
-}
-
-func chkMonth(month int) error {
-	if month < int(time.January) || int(time.December) < month {
-		return fmt.Errorf("invalid month: %d", month)
-	}
-
-	return nil
 }

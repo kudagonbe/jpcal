@@ -373,3 +373,80 @@ func Test_nationalHoliday_Description(t *testing.T) {
 		})
 	}
 }
+
+func TestGetDay(t *testing.T) {
+	type args struct {
+		year  int
+		month int
+		day   int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    Day
+		wantErr bool
+	}{
+		{
+			name: "success_normalday",
+			args: args{
+				year:  2020,
+				month: 1,
+				day:   2,
+			},
+			want:    &normalDay{year: 2020, month: 1, day: 2, dayType: TypeWeekDay},
+			wantErr: false,
+		},
+		{
+			name: "success_national_holiday",
+			args: args{
+				year:  2020,
+				month: 1,
+				day:   1,
+			},
+			want:    &nationalHoliday{year: 2020, month: 1, day: 1, holidayName: "元日"},
+			wantErr: false,
+		},
+		{
+			name: "too_small_year",
+			args: args{
+				year:  minYear - 1,
+				month: 1,
+				day:   1,
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "too_big_year",
+			args: args{
+				year:  maxYear + 1,
+				month: 1,
+				day:   1,
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "invalid_argument",
+			args: args{
+				year:  2020,
+				month: 1,
+				day:   32,
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetDay(tt.args.year, tt.args.month, tt.args.day)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetDay() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetDay() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

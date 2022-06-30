@@ -83,3 +83,20 @@ func (d *nationalHoliday) Type() DayType {
 func (d *nationalHoliday) Description() string {
 	return d.holidayName
 }
+
+func GetDay(year int, month int, day int) (Day, error) {
+	ds, err := AllDaysYM(year, month)
+	if err != nil {
+		return nil, err
+	}
+
+	dayStr := fmt.Sprintf("%04d-%02d-%02d", year, month, day)
+
+	for _, d := range ds {
+		if dayStr == d.Str() {
+			return d, nil
+		}
+	}
+
+	return nil, fmt.Errorf("invalid argument::year:%d month:%d day:%d", year, month, day)
+}

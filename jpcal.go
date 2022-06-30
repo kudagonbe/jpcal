@@ -2,8 +2,10 @@ package jpcal
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Judge if the specified day is a weekday.
@@ -58,4 +60,24 @@ func isSpecificTypeDay(year int, month int, day int, dt DayType) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func chkYear(year int) error {
+	if year < minYear {
+		return fmt.Errorf("jpcal is only supported after %d, but the year you set is %d", minYear, year)
+	}
+
+	if year > maxYear {
+		return fmt.Errorf("jpcal is only supported until %d, but the year you set is %d", maxYear, year)
+	}
+
+	return nil
+}
+
+func chkMonth(month int) error {
+	if month < int(time.January) || int(time.December) < month {
+		return fmt.Errorf("invalid month: %d", month)
+	}
+
+	return nil
 }
