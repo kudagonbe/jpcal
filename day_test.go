@@ -409,7 +409,7 @@ func TestGetDay(t *testing.T) {
 		{
 			name: "too_small_year",
 			args: args{
-				year:  minYear - 1,
+				year:  MinYear - 1,
 				month: 1,
 				day:   1,
 			},
@@ -419,7 +419,7 @@ func TestGetDay(t *testing.T) {
 		{
 			name: "too_big_year",
 			args: args{
-				year:  maxYear + 1,
+				year:  MaxYear + 1,
 				month: 1,
 				day:   1,
 			},

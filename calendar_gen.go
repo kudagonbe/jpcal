@@ -3,8 +3,11 @@
 
 package jpcal
 
-const minYear int = 1955
-const maxYear int = 2023
+// minimum year supported jpcal
+const MinYear int = 1955
+
+// maximum year supported jpcal
+const MaxYear int = 2023
 
 var holidays = map[int]map[int]string{
 	1955: {

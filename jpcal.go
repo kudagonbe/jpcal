@@ -63,12 +63,12 @@ func isSpecificTypeDay(year int, month int, day int, dt DayType) (bool, error) {
 }
 
 func chkYear(year int) error {
-	if year < minYear {
-		return fmt.Errorf("jpcal is only supported after %d, but the year you set is %d", minYear, year)
+	if year < MinYear {
+		return fmt.Errorf("jpcal is only supported after %d, but the year you set is %d", MinYear, year)
 	}
 
-	if year > maxYear {
-		return fmt.Errorf("jpcal is only supported until %d, but the year you set is %d", maxYear, year)
+	if year > MaxYear {
+		return fmt.Errorf("jpcal is only supported until %d, but the year you set is %d", MaxYear, year)
 	}
 
 	return nil

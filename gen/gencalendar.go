@@ -181,8 +181,11 @@ const prog = `
 
 package jpcal
 
-const minYear int = {{ .MinYear }}
-const maxYear int = {{ .MaxYear }}
+// minimum year supported jpcal
+const MinYear int = {{ .MinYear }}
+
+// maximum year supported jpcal
+const MaxYear int = {{ .MaxYear }}
 
 var holidays = map[int]map[int]string{
 {{range $k1, $v1 := .HolidayMap}}	{{ $k1 }}: {
