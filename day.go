@@ -5,9 +5,18 @@ import "time"
 const dateFmt = "2006-01-02"
 
 type Day interface {
+
+	// Get date string
+	// (e.g. "2006-01-01")
 	Str() string
+
+	// Get time.Time instance
 	Time() (time.Time, error)
+
+	//Get DayType
 	Type() DayType
+
+	//Get description of day in Japanese
 	Description() string
 }
 

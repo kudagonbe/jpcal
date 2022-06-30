@@ -11,14 +11,17 @@ import (
 
 type Days []Day
 
+// for override sort.Interface
 func (ds Days) Len() int {
 	return len(ds)
 }
 
+// for override sort.Interface
 func (ds Days) Less(i, j int) bool {
 	return ds[i].Str() < ds[j].Str()
 }
 
+// for override sort.Interface
 func (ds Days) Swap(i, j int) {
 	ds[i], ds[j] = ds[j], ds[i]
 }
