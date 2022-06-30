@@ -6,6 +6,20 @@
 
 This is a library made in Go language for acquiring and judging Japanese holidays.
 
+## Installing
+
+First, use go get to install the latest version of the library.
+
+```
+go get -u github.com/kudagonbe/jpcal@latest
+```
+
+Next, include jpcal in your application:
+
+```
+import "github.com/kudagonbe/jpcal"
+```
+
 ## Example
 
 1. Get `Day` instance
@@ -13,7 +27,7 @@ This is a library made in Go language for acquiring and judging Japanese holiday
 ```go
 var day Day
 
-day, _ := GetDay(2020, 1, 1)
+day, _ := jpcal.GetDay(2020, 1, 1)
 
 str := day.Str() // "2020-01-01"
 t := day.Time() // instance of time.Time
