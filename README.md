@@ -3,6 +3,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/kudagonbe/jpcal.svg)](https://pkg.go.dev/github.com/kudagonbe/jpcal)
 [![CI Job](https://github.com/kudagonbe/jpcal/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kudagonbe/jpcal/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/kudagonbe/jpcal/branch/main/graph/badge.svg?token=E3CJKEO0D5)](https://codecov.io/gh/kudagonbe/jpcal)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kudagonbe/jpcal)](https://goreportcard.com/report/github.com/kudagonbe/jpcal)
 
 This is a library made in Go language for acquiring and judging Japanese holidays.
 
@@ -25,7 +26,7 @@ import "github.com/kudagonbe/jpcal"
 1. Get `Day` instance
 
 ```go
-var day Day
+var day jpcal.Day
 
 day, _ := jpcal.GetDay(2020, 1, 1)
 
