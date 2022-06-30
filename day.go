@@ -69,17 +69,3 @@ func (d *nationalHoliday) Type() DayType {
 func (d *nationalHoliday) Description() string {
 	return d.holidayName
 }
-
-type Days []Day
-
-func (ds Days) Len() int {
-	return len(ds)
-}
-
-func (ds Days) Less(i, j int) bool {
-	return ds[i].Str() < ds[j].Str()
-}
-
-func (ds Days) Swap(i, j int) {
-	ds[i], ds[j] = ds[j], ds[i]
-}
