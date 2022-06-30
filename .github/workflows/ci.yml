@@ -1,6 +1,6 @@
 name: CI Job
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   setup:
@@ -25,4 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: test
-        run: go test ./... -v
+        run: go test ./... -race -coverprofile=coverage.out -covermode=atomic
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
