@@ -207,7 +207,9 @@ func appendNormalDaysYM(ds Days, year int, month int, dt DayType) (Days, error) 
 			return nil, err
 		}
 		ds = append(ds, &normalDay{
-			date:    fmt.Sprintf("%04d-%02d-%02d", year, month, d),
+			year:    year,
+			month:   month,
+			day:     d,
 			dayType: dt,
 		})
 	}
@@ -243,7 +245,9 @@ func appendHolidaysYM(ds Days, year int, month int) (Days, error) {
 			return nil, err
 		}
 		ds = append(ds, &nationalHoliday{
-			date:        fmt.Sprintf("%04d-%02d-%02d", year, month, d),
+			year:        year,
+			month:       month,
+			day:         d,
 			holidayName: hns[i],
 		})
 	}

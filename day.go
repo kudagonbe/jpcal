@@ -1,8 +1,9 @@
 package jpcal
 
-import "time"
-
-const dateFmt = "2006-01-02"
+import (
+	"fmt"
+	"time"
+)
 
 type Day interface {
 
@@ -21,25 +22,27 @@ type Day interface {
 }
 
 type normalDay struct {
-	date    string
+	year    int
+	month   int
+	day     int
 	dayType DayType
 }
 
 type DayType string
 
 const (
-	TypeWeekDay         DayType = "weekday"
-	TypeSaturday        DayType = "saturday"
-	TypeSunday          DayType = "sunday"
+	TypeWeekDay         DayType = "weekday"  // except for national holiday
+	TypeSaturday        DayType = "saturday" // except for national holiday
+	TypeSunday          DayType = "sunday"   // except for national holiday
 	TypeNationalHoliday DayType = "national_holiday"
 )
 
 func (d *normalDay) Str() string {
-	return d.date
+	return fmt.Sprintf("%04d-%02d-%02d", d.year, d.month, d.day)
 }
 
 func (d *normalDay) Time() (time.Time, error) {
-	return time.Parse(dateFmt, d.date)
+	return time.Date(d.year, time.Month(d.month), d.day, 0, 0, 0, 0, time.UTC), nil
 }
 
 func (d *normalDay) Type() DayType {
@@ -59,16 +62,18 @@ func (d *normalDay) Description() string {
 }
 
 type nationalHoliday struct {
-	date        string
+	year        int
+	month       int
+	day         int
 	holidayName string
 }
 
 func (d *nationalHoliday) Str() string {
-	return d.date
+	return fmt.Sprintf("%04d-%02d-%02d", d.year, d.month, d.day)
 }
 
 func (d *nationalHoliday) Time() (time.Time, error) {
-	return time.Parse(dateFmt, d.date)
+	return time.Date(d.year, time.Month(d.month), d.day, 0, 0, 0, 0, time.UTC), nil
 }
 
 func (d *nationalHoliday) Type() DayType {
