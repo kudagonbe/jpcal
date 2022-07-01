@@ -100,7 +100,7 @@ result, err := jpcal.IsNationalHoliday(2020, 1, 1) //true, nil
 
 ## Licence
 
-[MIT](https://github.com/kudagonbe/jpcal/blob/main/LICENCE)
+[MIT](https://github.com/kudagonbe/jpcal/blob/main/LICENSE)
 
 ## Author
 
