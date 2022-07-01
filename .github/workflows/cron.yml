@@ -1,9 +1,8 @@
 name: CRON Schedule job
 
-# on:
-  # schedule:
-    # - cron:  '0 23 * * *'
-on: [push, pull_request]
+on:
+  schedule:
+    - cron:  '0 23 * * *'
 
 jobs:
   generate-calendar:
