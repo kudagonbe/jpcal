@@ -19,7 +19,7 @@ import (
 	"golang.org/x/text/transform"
 )
 
-const url = "https://www8.cao.go.jp/chosei/shukujitsu/shukujitsu.csv"
+const url = "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
 
 func main() {
 	var minY, maxY int
