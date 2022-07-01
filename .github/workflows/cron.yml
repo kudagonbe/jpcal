@@ -69,7 +69,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: Failed to update the calendar
-          body: "Failed to update the calendar ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          body: "Failed to update the calendar ${{GITHUB_SERVER_URL}}/${{GITHUB_REPOSITORY}}/actions/runs/${{GITHUB_RUN_ID}}"
           labels: "failed-to-update"
       - name: exit
         if: ${{ steps.go_generate.outcome == 'failure' }}
