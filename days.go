@@ -1,7 +1,6 @@
 package jpcal
 
 import (
-	"errors"
 	"sort"
 	"strconv"
 	"strings"
@@ -68,35 +67,19 @@ func SpecificTypeDays(year int, ts ...DayType) (Days, error) {
 	}
 
 	if wd {
-		if newds, err := appendNormalDays(ds, year, TypeWeekDay); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendNormalDays(ds, year, TypeWeekDay)
 	}
 
 	if sat {
-		if newds, err := appendNormalDays(ds, year, TypeSaturday); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendNormalDays(ds, year, TypeSaturday)
 	}
 
 	if sun {
-		if newds, err := appendNormalDays(ds, year, TypeSunday); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendNormalDays(ds, year, TypeSunday)
 	}
 
 	if hd {
-		if newds, err := appendHolidays(ds, year); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendHolidays(ds, year)
 	}
 
 	sort.Sort(ds)
@@ -131,53 +114,33 @@ func SpecificTypeDaysYM(year int, month int, ts ...DayType) (Days, error) {
 	}
 
 	if wd {
-		if newds, err := appendNormalDaysYM(ds, year, month, TypeWeekDay); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendNormalDaysYM(ds, year, month, TypeWeekDay)
 	}
 
 	if sat {
-		if newds, err := appendNormalDaysYM(ds, year, month, TypeSaturday); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendNormalDaysYM(ds, year, month, TypeSaturday)
 	}
 
 	if sun {
-		if newds, err := appendNormalDaysYM(ds, year, month, TypeSunday); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendNormalDaysYM(ds, year, month, TypeSunday)
 	}
 
 	if hd {
-		if newds, err := appendHolidaysYM(ds, year, month); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendHolidaysYM(ds, year, month)
 	}
 
 	sort.Sort(ds)
 	return ds, nil
 }
 
-func appendNormalDays(ds Days, year int, dt DayType) (Days, error) {
+func appendNormalDays(ds Days, year int, dt DayType) Days {
 	for month := 1; month <= 12; month++ {
-		if newds, err := appendNormalDaysYM(ds, year, month, dt); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendNormalDaysYM(ds, year, month, dt)
 	}
-	return ds, nil
+	return ds
 }
 
-func appendNormalDaysYM(ds Days, year int, month int, dt DayType) (Days, error) {
+func appendNormalDaysYM(ds Days, year int, month int, dt DayType) Days {
 	var m map[int]map[int]string
 	switch dt {
 	case TypeWeekDay:
@@ -187,14 +150,14 @@ func appendNormalDaysYM(ds Days, year int, month int, dt DayType) (Days, error) 
 	case TypeSunday:
 		m = sundays
 	default:
-		return nil, errors.New("invalid day type")
+		return ds
 	}
 	if _, ok := m[year]; !ok {
-		return ds, nil
+		return ds
 	}
 
 	if _, ok := m[year][month]; !ok {
-		return ds, nil
+		return ds
 	}
 
 	hs := strings.Split(m[year][month], ",")
@@ -202,7 +165,7 @@ func appendNormalDaysYM(ds Days, year int, month int, dt DayType) (Days, error) 
 	for _, v := range hs {
 		d, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, err
+			return ds
 		}
 		ds = append(ds, &normalDay{
 			year:    year,
@@ -211,27 +174,23 @@ func appendNormalDaysYM(ds Days, year int, month int, dt DayType) (Days, error) 
 			dayType: dt,
 		})
 	}
-	return ds, nil
+	return ds
 }
 
-func appendHolidays(ds Days, year int) (Days, error) {
+func appendHolidays(ds Days, year int) Days {
 	for month := 1; month <= 12; month++ {
-		if newds, err := appendHolidaysYM(ds, year, month); err != nil {
-			return nil, err
-		} else {
-			ds = newds
-		}
+		ds = appendHolidaysYM(ds, year, month)
 	}
-	return ds, nil
+	return ds
 }
 
-func appendHolidaysYM(ds Days, year int, month int) (Days, error) {
+func appendHolidaysYM(ds Days, year int, month int) Days {
 	if _, ok := holidays[year]; !ok {
-		return ds, nil
+		return ds
 	}
 
 	if _, ok := holidays[year][month]; !ok {
-		return ds, nil
+		return ds
 	}
 
 	hs := strings.Split(holidays[year][month], ",")
@@ -240,7 +199,7 @@ func appendHolidaysYM(ds Days, year int, month int) (Days, error) {
 	for i, v := range hs {
 		d, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, err
+			return ds
 		}
 		ds = append(ds, &nationalHoliday{
 			year:        year,
@@ -249,5 +208,5 @@ func appendHolidaysYM(ds Days, year int, month int) (Days, error) {
 			holidayName: hns[i],
 		})
 	}
-	return ds, nil
+	return ds
 }
