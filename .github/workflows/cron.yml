@@ -55,7 +55,7 @@ jobs:
           destination_branch: "main"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_title: "A calendar CSV update has been detected"
-          pr_body: "a calendar csv update has been detected at ${{ env.current_datetime_str }}!!"
+          pr_body: "a calendar csv update has been detected at ${{ env.CURRENT_DATETIME_STR }}!!"
           pr_label: "calendar-update-detect"
       - name: get open issue
         if: ${{ steps.go_generate.outcome == 'failure' }}
