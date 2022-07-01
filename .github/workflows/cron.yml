@@ -27,8 +27,14 @@ jobs:
       - name: get diff
         run: echo "::set-output name=changed::$(git diff --name-only | wc -l)"
         id: diff
-      - name: push branch
+      - name: get open pr
         if: ${{ steps.diff.outputs.changed != '0' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "::set-output name=count::$(gh pr list --label calendar-update-detect --state open | grep '#' | wc -l)"
+        id: pr
+      - name: push branch
+        if: ${{ steps.pr.outputs.count == '0'}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -39,7 +45,7 @@ jobs:
           git commit -m "calendar update detect"
           git push -u origin feature/update_calendar_${{ env.CURRENT_DATETIME }}
       - name: create pull request
-        if: ${{ steps.diff.outputs.changed != '0' }}
+        if: ${{ steps.pr.outputs.count == '0'}}
         uses: repo-sync/pull-request@v2
         with:
           source_branch: "feature/update_calendar_${{ env.CURRENT_DATETIME }}"
