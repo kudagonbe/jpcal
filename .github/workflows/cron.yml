@@ -65,7 +65,7 @@ jobs:
         id: issue
       - name: create error issue
         if: ${{ steps.go_generate.outcome == 'failure' && steps.issue.outputs.count == '0'}}
-          uses: imjohnbo/issue-bot@v3
+        uses: imjohnbo/issue-bot@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: Failed to update the calendar
