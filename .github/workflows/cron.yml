@@ -23,18 +23,21 @@ jobs:
         run: echo "CURRENT_DATETIME_STR=$(date +'%Y/%m/%d/ %H:%M:%S')" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - name: go generate
+        id: go_generate
         run: go generate ./gen
+        continue-on-error: true
       - name: get diff
+        if: ${{ steps.go_generate.outcome == 'success' }}
         run: echo "::set-output name=changed::$(git diff --name-only | wc -l)"
         id: diff
       - name: get open pr
-        if: ${{ steps.diff.outputs.changed != '0' }}
+        if: ${{ steps.go_generate.outcome == 'success' && steps.diff.outputs.changed != '0' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: echo "::set-output name=count::$(gh pr list --label calendar-update-detect --state open | grep CSV | wc -l)"
         id: pr
       - name: push branch
-        if: ${{ steps.diff.outputs.changed != '0' && steps.pr.outputs.count == '0'}}
+        if: ${{ steps.go_generate.outcome == 'success' && steps.diff.outputs.changed != '0' && steps.pr.outputs.count == '0'}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -45,13 +48,30 @@ jobs:
           git commit -m "calendar update detect"
           git push -u origin feature/update_calendar_${{ env.CURRENT_DATETIME }}
       - name: create pull request
-        if: ${{ steps.diff.outputs.changed != '0' && steps.pr.outputs.count == '0'}}
+        if: ${{ steps.go_generate.outcome == 'success' && steps.diff.outputs.changed != '0' && steps.pr.outputs.count == '0'}}
         uses: repo-sync/pull-request@v2
         with:
           source_branch: "feature/update_calendar_${{ env.CURRENT_DATETIME }}"
           destination_branch: "main"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_title: "A calendar CSV update has been detected"
-          pr_body: "A calendar CSV update has been detected at ${{ env.CURRENT_DATETIME_STR }}!!"
+          pr_body: "a calendar csv update has been detected at ${{ env.current_datetime_str }}!!"
           pr_label: "calendar-update-detect"
-        
+      - name: get open issue
+        if: ${{ steps.go_generate.outcome == 'failure' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "::set-output name=count::$(gh issue list --label failed-to-update --state open | grep calendar | wc -l)"
+        id: issue
+      - name: create error issue
+        if: ${{ steps.go_generate.outcome == 'failure' && steps.issue.outputs.count == '0'}}
+          uses: imjohnbo/issue-bot@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Failed to update the calendar
+          body: |-
+            Failed to update the calendar at ${{ env.current_datetime_str }}!!
+            ```
+            ${{ toJSON(steps.go_generate) }}
+            ```
+          label: "failed-to-update"
