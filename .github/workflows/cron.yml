@@ -20,7 +20,7 @@ jobs:
         env:
           TZ: 'Asia/Tokyo'
         run: echo "CURRENT_DATETIME_STR=$(date +'%Y/%m/%d/ %H:%M:%S')" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: go generate
         id: go_generate
         run: go generate ./gen
